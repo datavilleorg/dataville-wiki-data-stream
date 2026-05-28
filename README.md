@@ -2,7 +2,7 @@
 
 A standalone Next.js demo showing how to build a **Wikipedia knowledge base tracker** — structured, webhook-style edit events from tracked Wikipedia articles, ready to wire into a RAG pipeline or competitor intelligence feed.
 
-Live demo: [dataville.com/use-cases/wikipedia-tracker](https://dataville.com/use-cases/wikipedia-tracker)
+Live demo: [app.dataville.com/use-cases/wikipedia-tracker](https://app.dataville.com/use-cases/wikipedia-tracker)
 
 ---
 
@@ -129,4 +129,4 @@ MIT — see [LICENSE](LICENSE).
 
 ---
 
-Built by [Dataville](https://dataville.com).
+Built by [Dataville](https://app.dataville.com).
