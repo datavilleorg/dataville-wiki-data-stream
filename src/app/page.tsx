@@ -49,7 +49,7 @@ export default function WikipediaTrackerPage() {
                 Simulated real-time Wikipedia edit events for competitor intelligence and knowledge base refresh
               </p>
               <p className="mt-0.5 text-xs text-maroon/50">
-                Data source: Wikimedia REST API · {TRACKED_ENTITIES.length} entities monitored
+                Data source: Dataville API · {TRACKED_ENTITIES.length} entities monitored
               </p>
             </div>
 
@@ -80,9 +80,10 @@ export default function WikipediaTrackerPage() {
             <p className="text-[11px] font-semibold uppercase tracking-widest text-maroon/40 mb-1">Featured use case</p>
             <h2 className="text-base font-bold text-maroon">Wikipedia Knowledge Base Refresh</h2>
             <p className="mt-1.5 text-sm text-maroon/70 leading-relaxed">
-              Subscribe to a set of Wikipedia categories and receive webhook-style events whenever a tracked article
-              is edited. Surface signals from founding year changes, product description updates, controversy edits,
-              and executive roster changes — exactly the payload shape you'd wire into a knowledge base refresh pipeline.
+              Query Wikipedia articles through the Dataville API and receive structured, clean article content
+              ready for knowledge base pipelines. Surface signals from founding year changes, product description
+              updates, controversy edits, and executive roster changes — exactly the payload shape you'd wire
+              into a knowledge base refresh pipeline.
             </p>
           </div>
 
@@ -91,10 +92,10 @@ export default function WikipediaTrackerPage() {
               <h3 className="text-[11px] font-semibold uppercase tracking-widest text-maroon/40 mb-3">Why use Dataville</h3>
               <ul className="space-y-2.5 text-sm text-maroon/70">
                 {[
-                  'Subscribe to Wikipedia categories — receive structured edit events without scraping',
+                  'One API call returns clean, structured Wikipedia article content — no scraping or parsing',
                   'Structured JSON payloads ready to plug into any knowledge base or RAG pipeline',
                   'Risk signals surfaced automatically from article categories (antitrust, sanctions, disputes)',
-                  'Track competitor companies, executives, and geographies in a single API subscription',
+                  'Track competitor companies, executives, and geographies with a single API endpoint',
                 ].map(item => (
                   <li key={item} className="flex gap-2.5">
                     <span className="mt-1.5 h-1 w-1 rounded-full bg-maroon/40 flex-shrink-0" />
@@ -108,14 +109,14 @@ export default function WikipediaTrackerPage() {
               <h3 className="text-[11px] font-semibold uppercase tracking-widest text-maroon/40 mb-3">Data source</h3>
               <div className="text-sm text-maroon/70 space-y-3">
                 <p>
-                  <span className="font-medium text-maroon">Wikimedia REST API</span> — real article summaries,
-                  categories, and infoboxes from English Wikipedia, enriched with simulated edit events.
+                  <span className="font-medium text-maroon">Dataville API</span> — real article content,
+                  categories, and metadata from English Wikipedia via the Dataville API, enriched with simulated edit events.
                 </p>
                 <ul className="space-y-2">
                   {[
                     ['Signal types', 'Founding year · Products · Controversies · Executives'],
                     ['Risk categories', 'Antitrust · Privacy · Labor disputes · SEC investigations · Export controls'],
-                    ['Payload', 'Exact shape developers receive for knowledge base refresh pipelines'],
+                    ['Payload', 'Exact response shape from the Dataville Wikipedia endpoint'],
                   ].map(([label, value]) => (
                     <li key={label} className="flex gap-2.5">
                       <span className="mt-1.5 h-1 w-1 rounded-full bg-maroon/40 flex-shrink-0" />
@@ -124,12 +125,12 @@ export default function WikipediaTrackerPage() {
                   ))}
                 </ul>
                 <a
-                  href="https://en.wikipedia.org/api/rest_v1/"
+                  href="https://app.dataville.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-xs text-maroon hover:underline font-medium"
                 >
-                  View Wikimedia REST API docs
+                  View Dataville API
                   <FiExternalLink className="h-3 w-3" />
                 </a>
               </div>

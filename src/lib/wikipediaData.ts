@@ -1,4 +1,4 @@
-import { TrackedEntity, EditEvent, RiskFlag, ArticlePayload, WikipediaStats, SectionType, RiskLevel } from '@/types/wikipedia';
+import { TrackedEntity, EditEvent, RiskFlag, ArticlePayload, DatavilleWikiResponse, WikipediaStats, SectionType, RiskLevel } from '@/types/wikipedia';
 
 export const TRACKED_ENTITIES: TrackedEntity[] = [
   {
@@ -377,45 +377,25 @@ export function extractRiskFlags(): RiskFlag[] {
   return flags.sort((a, b) => order[a.risk_level] - order[b.risk_level]);
 }
 
-const WIKI_API_BASE = 'https://en.wikipedia.org/api/rest_v1';
+const DATAVILLE_API_BASE = 'https://app.dataville.com';
 
-interface WikiSummaryResponse {
-  title: string;
-  extract: string;
-  timestamp: string;
-}
+const articleCache: Record<string, ArticlePayload> = {};
 
-const summaryCache: Record<string, WikiSummaryResponse> = {};
-
-export async function fetchWikipediaSummary(wikiTitle: string): Promise<WikiSummaryResponse | null> {
-  if (summaryCache[wikiTitle]) return summaryCache[wikiTitle];
+export async function fetchDatavilleArticle(wikiTitle: string): Promise<ArticlePayload | null> {
+  if (articleCache[wikiTitle]) return articleCache[wikiTitle];
 
   try {
-    const res = await fetch(`${WIKI_API_BASE}/page/summary/${encodeURIComponent(wikiTitle)}`, {
-      headers: { 'Api-User-Agent': 'dataville-demo/1.0 (mansip.dev@gmail.com)' },
-    });
+    const searchTerm = encodeURIComponent(wikiTitle.replace(/_/g, ' '));
+    const res = await fetch(`${DATAVILLE_API_BASE}/wiki/${searchTerm}`);
     if (!res.ok) return null;
-    const data = await res.json();
-    summaryCache[wikiTitle] = data;
-    return data;
+    const json: DatavilleWikiResponse = await res.json();
+    if (json.status !== 'success' || !json.data) return null;
+    const payload: ArticlePayload = json.data;
+    articleCache[wikiTitle] = payload;
+    return payload;
   } catch {
     return null;
   }
-}
-
-export function buildArticlePayload(entity: TrackedEntity, summary: string, lastEdited: string): ArticlePayload {
-  return {
-    title: entity.wiki_title.replace(/_/g, ' '),
-    summary,
-    categories: entity.categories,
-    infobox: entity.infobox,
-    related: entity.related,
-    language: 'en',
-    last_edited: lastEdited,
-    query_cost_credits: 1,
-    attribution: 'CC BY-SA 4.0 - Wikipedia contributors',
-    source_url: `https://en.wikipedia.org/wiki/${entity.wiki_title}`,
-  };
 }
 
 export function generateStats(editEvents: EditEvent[], riskFlags: RiskFlag[]): WikipediaStats {
