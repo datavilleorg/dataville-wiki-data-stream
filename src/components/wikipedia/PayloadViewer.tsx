@@ -16,8 +16,8 @@ export default function PayloadViewer({ selectedEntity, onSelectEntity }: Payloa
 
   const activeEntity = TRACKED_ENTITIES.find(e => e.wiki_title === selectedEntity);
   const endpointSlug = activeEntity
-    ? activeEntity.wiki_title.replace(/_/g, '-').replace(/,/g, '').toLowerCase()
-    : 'apple-inc';
+    ? encodeURIComponent(activeEntity.wiki_title.replace(/_/g, ' '))
+    : 'Apple%20Inc.';
 
   const handleCopy = useCallback(() => {
     if (!payload) return;
@@ -32,7 +32,7 @@ export default function PayloadViewer({ selectedEntity, onSelectEntity }: Payloa
       <div className="flex items-start justify-between mb-4 gap-4">
         <div>
           <h2 className="text-lg font-bold text-maroon">Article Payload</h2>
-          <p className="text-xs text-maroon/50">Exact response shape from the Dataville Wikipedia API</p>
+          <p className="text-xs text-maroon/50">Live response from the Dataville Wikipedia API</p>
         </div>
         <div className="flex-shrink-0">
           <select
@@ -90,8 +90,8 @@ export default function PayloadViewer({ selectedEntity, onSelectEntity }: Payloa
 
         {/* Attribution footer */}
         <div className="px-4 py-2 bg-[#f5f0eb] border-t border-[#E5D5C5] flex items-center justify-between">
-          <span className="text-[10px] text-maroon/40">CC BY-SA 4.0 — Wikipedia contributors</span>
-          <span className="text-[10px] text-maroon/40">query_cost_credits: 1</span>
+          <span className="text-[10px] text-maroon/40">Source: Wikipedia via Dataville API</span>
+          <span className="text-[10px] text-maroon/40">app.dataville.com</span>
         </div>
       </div>
     </div>

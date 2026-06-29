@@ -49,17 +49,42 @@ export interface TrackedEntity {
   monitored_sections: SectionType[];
 }
 
+export interface DatavilleWikiResponse {
+  status: string;
+  account_state: string;
+  data: {
+    id: string;
+    title: string;
+    body: string;
+    source: string;
+    language: string;
+    last_updated: string;
+    entities: string[];
+    metadata: {
+      url: string;
+      pageid: number | null;
+      categories: Array<{ ns: number; title: string }>;
+    };
+  };
+  usage: {
+    requests_remaining: number;
+    request_limit: number;
+  };
+}
+
 export interface ArticlePayload {
+  id: string;
   title: string;
-  summary: string;
-  categories: string[];
-  infobox: Record<string, string>;
-  related: string[];
-  language: 'en';
-  last_edited: string;
-  query_cost_credits: 1;
-  attribution: 'CC BY-SA 4.0 - Wikipedia contributors';
-  source_url: string;
+  body: string;
+  source: string;
+  language: string;
+  last_updated: string;
+  entities: string[];
+  metadata: {
+    url: string;
+    pageid: number | null;
+    categories: Array<{ ns: number; title: string }>;
+  };
 }
 
 export interface WikipediaStats {

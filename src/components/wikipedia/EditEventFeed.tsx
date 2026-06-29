@@ -47,7 +47,7 @@ export default function EditEventFeed({ events, isLive, onToggleLive }: EditEven
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-lg font-bold text-maroon">Live Edit Stream</h2>
-          <p className="text-xs text-maroon/50">Simulated webhook events from tracked Wikipedia articles</p>
+          <p className="text-xs text-maroon/50">Simulated edit events for articles tracked via the Dataville API</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5 text-xs text-maroon/60">

@@ -6,16 +6,15 @@ import {
   generateInitialEditEvents,
   generateEditEvent,
   extractRiskFlags,
-  fetchWikipediaSummary,
-  buildArticlePayload,
+  fetchDatavilleArticle,
   generateStats,
 } from '@/lib/wikipediaData';
 import { EditEvent, RiskFlag, ArticlePayload, WikipediaStats } from '@/types/wikipedia';
 
 let globalEditEvents: EditEvent[] = [];
 const globalRiskFlags: RiskFlag[] = extractRiskFlags();
-const globalEntitySummaries: Map<string, { summary: string; lastEdited: string }> = new Map();
-let globalSummariesLoaded = false;
+const globalEntityPayloads: Map<string, ArticlePayload> = new Map();
+let globalPayloadsLoaded = false;
 
 export function useEditEvents() {
   const [events, setEvents] = useState<EditEvent[]>([]);
@@ -59,48 +58,39 @@ export function useRiskFlags() {
   return { flags: globalRiskFlags };
 }
 
-export function useEntitySummaries() {
-  const [summaries, setSummaries] = useState(new Map(globalEntitySummaries));
-  const [isLoading, setIsLoading] = useState(!globalSummariesLoaded);
+export function useEntityPayloads() {
+  const [payloads, setPayloads] = useState(new Map(globalEntityPayloads));
+  const [isLoading, setIsLoading] = useState(!globalPayloadsLoaded);
 
   useEffect(() => {
-    if (globalSummariesLoaded) return;
+    if (globalPayloadsLoaded) return;
 
     const fetchAll = async () => {
       for (const entity of TRACKED_ENTITIES) {
-        const data = await fetchWikipediaSummary(entity.wiki_title);
+        const data = await fetchDatavilleArticle(entity.wiki_title);
         if (data) {
-          globalEntitySummaries.set(entity.wiki_title, {
-            summary: data.extract,
-            lastEdited: data.timestamp,
-          });
+          globalEntityPayloads.set(entity.wiki_title, data);
         }
         await new Promise(r => setTimeout(r, 80));
       }
-      globalSummariesLoaded = true;
-      setSummaries(new Map(globalEntitySummaries));
+      globalPayloadsLoaded = true;
+      setPayloads(new Map(globalEntityPayloads));
       setIsLoading(false);
     };
 
     fetchAll();
   }, []);
 
-  return { summaries, isLoading };
+  return { payloads, isLoading };
 }
 
 export function useArticlePayload(wikiTitle: string | null): { payload: ArticlePayload | null } {
-  const { summaries } = useEntitySummaries();
+  const { payloads } = useEntityPayloads();
 
   const payload = useMemo<ArticlePayload | null>(() => {
     if (!wikiTitle) return null;
-    const entity = TRACKED_ENTITIES.find(e => e.wiki_title === wikiTitle);
-    if (!entity) return null;
-
-    const data = summaries.get(wikiTitle);
-    if (!data) return null;
-
-    return buildArticlePayload(entity, data.summary, data.lastEdited);
-  }, [wikiTitle, summaries]);
+    return payloads.get(wikiTitle) ?? null;
+  }, [wikiTitle, payloads]);
 
   return { payload };
 }
